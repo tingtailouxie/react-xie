@@ -1,12 +1,14 @@
-import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import React,{Component} from 'react'
 
-import {increment,decrement} from './redux/action-creators'
-
-export default class App extends Component{
+/* ui组件：不使用任何redux相关语法 */
+export default class Counter extends Component{
     static propTypes = {
-        //使用store 
-        store:PropTypes.object.isRequired
+        //显示一般属性
+        count:PropTypes.number.isRequired,
+        // 更新一般属性
+        increment:PropTypes.func.isRequired,
+        decrement:PropTypes.func.isRequired,
     }
 
     //创建一个ref容器
@@ -16,24 +18,24 @@ export default class App extends Component{
         // 获取用户输入的值
         const number = this.numberRef.current.value*1
         // 通知store做增加的更新  dispatch() 产生新的state
-        this.props.store.dispatch(increment(number))
+        this.props.increment(number)
     }
    
     decrement = ()=>{
         //获取用户输入的值
         const number = this.numberRef.current.value*1
         // 通知store做减少的更新  dispatch() 产生新的state
-        this.props.store.dispatch(decrement(number))
+        this.props.decrement(number)
     }
 
     incrementIfOdd = ()=>{
         // 获取当前的状态
-        const count = this.props.store.getState()
+        const count = this.props.count
 
         //获取用户输入的值
         const number = this.numberRef.current.value*1
         if(count % 2 === 1){
-           this.props.store.dispatch(increment(number))
+            this.props.increment(number)
         }
     }
 
@@ -41,14 +43,14 @@ export default class App extends Component{
         //获取用户输入的值
         const number = this.numberRef.current.value*1 
         setTimeout(()=>{
-            this.props.store.dispatch(increment(number))
+            this.props.increment(number)
         },1000)
     }
 
 
     render(){
         // 得到store中的状态
-        const count = this.props.store.getState()
+        const count = this.props.count
         return (
             <div>
                 <p>click {count} times </p>
@@ -67,5 +69,4 @@ export default class App extends Component{
         )
     }
 }
-
 
