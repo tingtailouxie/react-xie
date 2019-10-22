@@ -23,32 +23,7 @@ export default class Login extends Component{
         // console.log(values, username, password)
     
         // 对表单所有字段进行统一验证
-        this.props.form.validateFields(async (err, {username, password}) => {
-          if (!err) {
-            // try {} catch (error) {}
-            // alert(`发登陆的ajax请求, username=${username}, password=${password}`)
-            const result = await reqLogin(username, password)
-            // 登陆成功
-            if (result.status===0) {
-              // 将user信息保存到local
-              const user = result.data
-              // localStorage.setItem('user_key', JSON.stringify(user))
-              storageUtils.saveUser(user)
-              // 保存到内存中
-              memoryUtils.user = user
-    
-              // 跳转到管理界面
-              this.props.history.replace('/')
-              message.success('登陆成功!')
-            } else { // 登陆失败
-              message.error(result.msg)
-            }
-            
-    
-          } else {
-            // alert('验证失败!')
-          }
-        })
+        
     }
     
       /* 
@@ -60,12 +35,13 @@ export default class Login extends Component{
         // 3).必须小于等于12位
         // 4).必须是英文、数字或下划线组成
         value = value.trim()
-        if (!value) {
+        if (value === '') {
             callback('密码必须输入')
         } else if (value.length<4) {
             callback('密码不能小于4位')
         } else if (value.length>12) {
             callback('密码不能大于12位')
+            // 正则身上有test方法
         } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
             callback('密码必须是英文、数字或下划线组成')
         } else {
@@ -73,14 +49,9 @@ export default class Login extends Component{
         }
     }
     render(){
-        // 读取保存的user, 如果存在, 直接跳转到管理界面
-    // const user = JSON.parse(localStorage.getItem('user_key') || '{}')
-        const user = memoryUtils.user
-        if (user._id) {
-           return <Redirect to="/" /> // 自动跳转到指定的路由路径
-        }
 
         const { getFieldDecorator } = this.props.form
+        
         return(
             <div className='login'>
                 <header className='login-header'>
